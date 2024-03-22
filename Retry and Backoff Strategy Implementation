@@ -1,0 +1,23 @@
+In this document, I have presented the implementation of a retry and backoff strategy for database write operations in the API.
+Retry Mechanism
+Decision to Retry: Failed write operations are automatically retried to mitigate transient failures.
+Maximum Retry Attempts: I have set a maximum of 3 retry attempts before considering the operation as permanently failed.
+Rationale: I chose 3 as the maximum retry attempts to balance between giving the operation a chance to succeed and avoiding prolonged delays for users.
+
+Backoff Strategy
+Exponential Backoff Algorithm: The delay between successive retries increases exponentially, preventing overwhelming the database during transient failures.
+Parameters:
+Initial Delay: 1 second
+Maximum Delay: 10 seconds
+Backoff Multiplier: 2
+Rationale: I selected an exponential backoff strategy to prevent rapid retries and minimize the impact on system stability. The parameters were chosen based on considerations of system stability, user experience, and the expected nature of transient failures.
+
+Implementation Details
+In the MockDatabaseService class:
+The Retry method encapsulates the retry logic, handling transient failures and managing retry attempts.
+The CalculateDelay method computes the delay between retry attempts using the exponential backoff strategy.
+I have incorporated logging to track retry attempts, delays, and operation outcomes for debugging and monitoring purposes.
+Rationale
+System Stability: The chosen retry and backoff strategy helps maintain system stability by gracefully handling transient failures without overwhelming the database or causing service degradation.
+User Experience: By implementing a robust retry mechanism, I aim to provide a seamless user experience by minimizing the impact of temporary disruptions and ensuring that write operations eventually succeed.
+Nature of Transient Failures: The selected strategy aligns with the expected types of transient failures in our system, such as network issues or temporary database unavailability, and provides an appropriate response to mitigate their impact.
